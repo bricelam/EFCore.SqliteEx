@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27428.2037
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.SqliteExtensions", "EFCore.SqliteExtensions\EFCore.SqliteExtensions.csproj", "{BF429CE3-D9D0-48E9-88EE-DD1A4A80CBE9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.SqliteExtensions.Test", "EFCore.SqliteExtensions.Test\EFCore.SqliteExtensions.Test.csproj", "{71C29611-4174-4024-91D3-DA0C7763CDCD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BF429CE3-D9D0-48E9-88EE-DD1A4A80CBE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF429CE3-D9D0-48E9-88EE-DD1A4A80CBE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF429CE3-D9D0-48E9-88EE-DD1A4A80CBE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF429CE3-D9D0-48E9-88EE-DD1A4A80CBE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71C29611-4174-4024-91D3-DA0C7763CDCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71C29611-4174-4024-91D3-DA0C7763CDCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71C29611-4174-4024-91D3-DA0C7763CDCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71C29611-4174-4024-91D3-DA0C7763CDCD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {61CE2913-B24A-4EB9-AFA6-9252CF85BFC6}
+	EndGlobalSection
+EndGlobal
