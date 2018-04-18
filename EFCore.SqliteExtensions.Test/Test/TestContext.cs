@@ -10,10 +10,10 @@ namespace Bricelam.EntityFrameworkCore.Sqlite.Test
         protected override void OnConfiguring(DbContextOptionsBuilder options)
             => options
                 .UseSqlite("Data Source=:memory:")
-                .UseSqliteExtensions();
+                .ExtendSqlite();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
             => modelBuilder.Entity<TestEntity>()
-                .HasData(new TestEntity { Id = 1, TimeSpan = new TimeSpan(20, 20, 8) });
+                .HasData(new TestEntity { Id = 1, TimeSpan = new TimeSpan(20, 20, 8), Days = 0.847314814815 });
     }
 }

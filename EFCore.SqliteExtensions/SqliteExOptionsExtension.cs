@@ -3,9 +3,10 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Bricelam.EntityFrameworkCore.Sqlite
 {
-    class SqliteExtensionsOptionsExtension : IDbContextOptionsExtension
+    class SqliteExOptionsExtension : IDbContextOptionsExtension
     {
-        public string LogFragment => throw new System.NotImplementedException();
+        public string LogFragment
+            => string.Empty;
 
         public long GetServiceProviderHashCode()
             => 0;

@@ -6,5 +6,6 @@ namespace Bricelam.EntityFrameworkCore.Sqlite.Test
     {
         public int Id { get; set; }
         public TimeSpan TimeSpan { get; set; }
+        public double Days { get; set; }
     }
 }

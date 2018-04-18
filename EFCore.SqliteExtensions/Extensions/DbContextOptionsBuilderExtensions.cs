@@ -5,19 +5,19 @@ namespace Microsoft.EntityFrameworkCore
 {
     public static class DbContextOptionsBuilderExtensions
     {
-        public static DbContextOptionsBuilder UseSqliteExtensions(this DbContextOptionsBuilder optionsBuilder)
+        public static DbContextOptionsBuilder ExtendSqlite(this DbContextOptionsBuilder optionsBuilder)
         {
-            var extension = optionsBuilder.Options.FindExtension<SqliteExtensionsOptionsExtension>()
-                ?? new SqliteExtensionsOptionsExtension();
+            var extension = optionsBuilder.Options.FindExtension<SqliteExOptionsExtension>()
+                ?? new SqliteExOptionsExtension();
 
             ((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(extension);
 
             return optionsBuilder;
         }
 
-        public static DbContextOptionsBuilder<TContext> UseSqliteExtensions<TContext>(
+        public static DbContextOptionsBuilder<TContext> ExtendSqlite<TContext>(
             this DbContextOptionsBuilder<TContext> optionsBuilder)
             where TContext : DbContext
-            => (DbContextOptionsBuilder<TContext>)UseSqliteExtensions((DbContextOptionsBuilder)optionsBuilder);
+            => (DbContextOptionsBuilder<TContext>)ExtendSqlite((DbContextOptionsBuilder)optionsBuilder);
     }
 }
