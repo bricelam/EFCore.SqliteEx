@@ -4,7 +4,7 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
     <IsPackable>false</IsPackable>
     <RootNamespace>Bricelam.EntityFrameworkCore.Sqlite</RootNamespace>
-    <AssemblyName>Bricelam.EntityFrameworkCore.SqliteExtensions.Test</AssemblyName>
+    <AssemblyName>Bricelam.EntityFrameworkCore.SqliteEx.Test</AssemblyName>
   </PropertyGroup>
 
   <ItemGroup>
@@ -15,7 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EFCore.SqliteExtensions\EFCore.SqliteExtensions.csproj" />
+    <ProjectReference Include="..\EFCore.SqliteEx\EFCore.SqliteEx.csproj" />
   </ItemGroup>
 
 </Project>

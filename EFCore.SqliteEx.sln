@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2037
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.SqliteExtensions", "EFCore.SqliteExtensions\EFCore.SqliteExtensions.csproj", "{BF429CE3-D9D0-48E9-88EE-DD1A4A80CBE9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.SqliteEx", "EFCore.SqliteEx\EFCore.SqliteEx.csproj", "{BF429CE3-D9D0-48E9-88EE-DD1A4A80CBE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.SqliteExtensions.Test", "EFCore.SqliteExtensions.Test\EFCore.SqliteExtensions.Test.csproj", "{71C29611-4174-4024-91D3-DA0C7763CDCD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EFCore.SqliteEx.Test", "EFCore.SqliteEx.Test\EFCore.SqliteEx.Test.csproj", "{71C29611-4174-4024-91D3-DA0C7763CDCD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

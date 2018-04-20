@@ -8,7 +8,7 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddSqliteExtensions(this IServiceCollection services)
+        public static IServiceCollection AddSqliteEx(this IServiceCollection services)
         {
             var compositeMethodCallTranslator = Remove<ICompositeMethodCallTranslator>(services);
             var memberTranslator = Remove<IMemberTranslator>(services);

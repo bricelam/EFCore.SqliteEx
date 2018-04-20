@@ -18,7 +18,7 @@ namespace Bricelam.EntityFrameworkCore.Sqlite
 
         public bool ApplyServices(IServiceCollection services)
         {
-            services.AddSqliteExtensions();
+            services.AddSqliteEx();
 
             return false;
         }

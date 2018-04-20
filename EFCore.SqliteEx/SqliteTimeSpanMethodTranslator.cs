@@ -9,6 +9,7 @@ namespace Bricelam.EntityFrameworkCore.Sqlite
     {
         public Expression Translate(MethodCallExpression methodCallExpression)
         {
+            // TODO: Use MethodInfo instead
             if (methodCallExpression.Method.DeclaringType != typeof(TimeSpan))
                 return null;
 

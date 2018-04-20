@@ -6,7 +6,7 @@ Task("Build")
     .Does(
         () =>
             DotNetCoreBuild(
-                "EFCore.SqliteExtensions.sln",
+                "EFCore.SqliteEx.sln",
                 new DotNetCoreBuildSettings
                 {
                     Configuration = configuration,
@@ -26,7 +26,7 @@ Task("Test")
     .Does(
         () =>
             DotNetCoreTest(
-                "EFCore.SqliteExtensions.Test/EFCore.SqliteExtensions.Test.csproj",
+                "EFCore.SqliteEx.Test/EFCore.SqliteEx.Test.csproj",
                 new DotNetCoreTestSettings
                 {
                     Configuration = configuration,
