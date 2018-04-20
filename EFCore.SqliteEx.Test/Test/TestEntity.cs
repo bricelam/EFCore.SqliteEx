@@ -1,11 +1,8 @@
-﻿using System;
-
-namespace Bricelam.EntityFrameworkCore.Sqlite.Test
+﻿namespace Bricelam.EntityFrameworkCore.Sqlite.Test
 {
-    class TestEntity
+    class TestEntity<TProperty>
     {
         public int Id { get; set; }
-        public TimeSpan TimeSpan { get; set; }
-        public double Days { get; set; }
+        public TProperty Value { get; set; }
     }
 }
