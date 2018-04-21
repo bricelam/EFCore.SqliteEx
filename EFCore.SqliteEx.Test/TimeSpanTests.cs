@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using System.Linq.Expressions;
 using Bricelam.EntityFrameworkCore.Sqlite.Test;
 using Xunit;
 
@@ -12,8 +11,8 @@ namespace Bricelam.EntityFrameworkCore.Sqlite
         public void TotalDays()
         {
             Test(
-                new TimeSpan(20, 20, 8),
-                v => v.TotalDays,
+                TestEntity.Create(value: new TimeSpan(20, 20, 8)),
+                x => x.Select(e => e.Value.TotalDays),
                 "SELECT days(\"e\".\"Value\")");
         }
 
@@ -21,33 +20,28 @@ namespace Bricelam.EntityFrameworkCore.Sqlite
         public void FromDays()
         {
             Test(
-                0.847314814815,
-                v => TimeSpan.FromDays(v),
+                TestEntity.Create(value: 0.847314814815),
+                x => x.Select(e => TimeSpan.FromDays(e.Value)),
                 "SELECT timespan(\"e\".\"Value\")");
         }
 
         void Test<TValue, TResult>(
-            TValue value,
-            Expression<Func<TValue, TResult>> projection,
+            TestEntity<TValue> seed,
+            Func<IQueryable<TestEntity<TValue>>, IQueryable<TResult>> query,
             string expectedSql)
         {
-            using (var db = TestContext.Create(value))
+            using (var db = new TestContext<TestEntity<TValue>>())
             {
                 db.Database.EnsureCreated();
 
-                var parameter = Expression.Parameter(typeof(TestEntity<TValue>), "e");
-                var result = db.Entities
-                    .Where(e => e.Id == 1)
-                    .Select(
-                        (Expression<Func<TestEntity<TValue>, TResult>>)Expression.Lambda(
-                            Expression.Invoke(projection, Expression.Property(parameter, "Value")),
-                            parameter))
-                    .First();
+                db.Add(seed);
+                db.SaveChanges();
 
+                var result = query(db.Entities).ToList();
                 Assert.Contains(expectedSql, db.Sql);
 
-                var expectedResult = projection.Compile().Invoke(value);
-                Assert.Equal(expectedResult, result);
+                var oracleResult = query(Queryable.AsQueryable(new[] { seed })).ToList();
+                Assert.Equal(oracleResult, result);
             }
         }
     }

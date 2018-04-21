@@ -3,16 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Bricelam.EntityFrameworkCore.Sqlite.Test
 {
-    class TestContext<TProperty> : DbContext
+    class TestContext<TEntity> : DbContext
+        where TEntity : class
     {
-        readonly TProperty _value;
         readonly SqliteConnection _connection = new SqliteConnection("Data Source=:memory:");
         readonly TestLoggerFactory _loggerFactory = new TestLoggerFactory();
 
-        public TestContext(TProperty value)
-            => _value = value;
-
-        public DbSet<TestEntity<TProperty>> Entities { get; set; }
+        public DbSet<TEntity> Entities { get; set; }
 
         public string Sql
             => _loggerFactory.Logger.Sql;
@@ -28,17 +25,7 @@ namespace Bricelam.EntityFrameworkCore.Sqlite.Test
                 .UseLoggerFactory(_loggerFactory);
         }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-            => modelBuilder.Entity<TestEntity<TProperty>>()
-                .HasData(new TestEntity<TProperty> { Id = 1, Value = _value });
-
         public override void Dispose()
             => _connection.Dispose();
-    }
-
-    static class TestContext
-    {
-        public static TestContext<TProperty> Create<TProperty>(TProperty value)
-            => new TestContext<TProperty>(value);
     }
 }
