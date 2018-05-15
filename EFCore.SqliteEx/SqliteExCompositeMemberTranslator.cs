@@ -1,18 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
+using Microsoft.EntityFrameworkCore.Sqlite.Query.ExpressionTranslators.Internal;
 
 namespace Bricelam.EntityFrameworkCore.Sqlite
 {
-    class SqliteExCompositeMemberTranslator : RelationalCompositeMemberTranslator
+    class SqliteExCompositeMemberTranslator : SqliteCompositeMemberTranslator
     {
-        public SqliteExCompositeMemberTranslator(
-            IMemberTranslator memberTranslator,
-            RelationalCompositeMemberTranslatorDependencies dependencies)
+        public SqliteExCompositeMemberTranslator(RelationalCompositeMemberTranslatorDependencies dependencies)
             : base(dependencies)
-            => AddTranslators(
-                new[]
-                {
-                    memberTranslator,
-                    new SqliteTimeSpanMemberTranslator()
-                });
+            => AddTranslators(new[] { new SqliteTimeSpanMemberTranslator() });
     }
 }

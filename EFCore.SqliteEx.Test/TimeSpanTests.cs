@@ -115,6 +115,24 @@ namespace Bricelam.EntityFrameworkCore.Sqlite
                 "SELECT timespan(\"e\".\"Value\")");
         }
 
+        [Fact]
+        public void op_Negate()
+        {
+            Test(
+                TestEntity.Create(TimeSpan.FromMinutes(1)),
+                x => x.Select(e => -e.Value),
+                "SELECT timespan(-days(\"e\".\"Value\"))");
+        }
+
+        [Fact]
+        public void Negate()
+        {
+            Test(
+                TestEntity.Create(TimeSpan.FromMinutes(1)),
+                x => x.Select(e => e.Value.Negate()),
+                "SELECT timespan(-days(\"e\".\"Value\"))");
+        }
+
         void Test<TValue, TResult>(
             TestEntity<TValue> seed,
             Func<IQueryable<TestEntity<TValue>>, IQueryable<TResult>> query,

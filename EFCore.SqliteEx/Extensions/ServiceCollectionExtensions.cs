@@ -1,7 +1,8 @@
-﻿using System;
+﻿using System.Diagnostics;
 using System.Linq;
 using Bricelam.EntityFrameworkCore.Sqlite;
 using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
+using Microsoft.EntityFrameworkCore.Query.ExpressionVisitors;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -9,43 +10,28 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddSqliteEx(this IServiceCollection services)
-        {
-            var compositeMethodCallTranslator = Remove<ICompositeMethodCallTranslator>(services);
-            var memberTranslator = Remove<IMemberTranslator>(services);
-            var relationalConnection = Remove<IRelationalConnection>(services);
+            => services
+                .AddOrReplace<ICompositeMethodCallTranslator, SqliteExCompositeMethodCallTranslator>(
+                    ServiceLifetime.Singleton)
+                .AddOrReplace<IMemberTranslator, SqliteExCompositeMemberTranslator>(ServiceLifetime.Singleton)
+                .AddOrReplace<ISqlTranslatingExpressionVisitorFactory, SqliteExSqlTranslatingExpressionVisitorFactory>(
+                    ServiceLifetime.Singleton)
+                .AddOrReplace<IRelationalConnection, SqliteExRelationalConnection>(ServiceLifetime.Scoped);
 
-            return services
-                .AddSingleton<ICompositeMethodCallTranslator>(
-                    p => new SqliteExCompositeMethodCallTranslator(
-                        compositeMethodCallTranslator(p),
-                        p.GetRequiredService<RelationalCompositeMethodCallTranslatorDependencies>()))
-                .AddSingleton<IMemberTranslator>(
-                    p => new SqliteExCompositeMemberTranslator(
-                        memberTranslator(p),
-                        p.GetRequiredService<RelationalCompositeMemberTranslatorDependencies>()))
-                .AddScoped<IRelationalConnection>(
-                    p => new SqliteExRelationalConnection(relationalConnection(p)));
-        }
-
-        private static Func<IServiceProvider, TService> Remove<TService>(IServiceCollection services)
+        private static IServiceCollection AddOrReplace<TService, TImplementation>(
+            this IServiceCollection services,
+            ServiceLifetime lifetime)
         {
             var serviceDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(TService));
-            if (serviceDescriptor == null)
-                throw new InvalidOperationException("Call UseSqlite() before ExtendSqlite().");
-
-            services.Remove(serviceDescriptor);
-
-            if (serviceDescriptor.ImplementationType != null)
+            if (serviceDescriptor != null)
             {
-                return p => (TService)ActivatorUtilities.CreateInstance(p, serviceDescriptor.ImplementationType);
-            }
-            if (serviceDescriptor.ImplementationFactory != null)
-            {
-                return p => (TService)serviceDescriptor.ImplementationFactory(p);
+                Debug.Assert(serviceDescriptor.Lifetime == lifetime);
+                services.Remove(serviceDescriptor);
             }
 
-            throw new InvalidOperationException("Can't create service.");
-            //return p => (TService)serviceDescriptor.ImplementationInstance;
+            services.Add(new ServiceDescriptor(typeof(TService), typeof(TImplementation), lifetime));
+
+            return services;
         }
     }
 }

@@ -1,29 +1,12 @@
-﻿using System.Linq.Expressions;
-using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
+﻿using Microsoft.EntityFrameworkCore.Query.ExpressionTranslators;
+using Microsoft.EntityFrameworkCore.Sqlite.Query.ExpressionTranslators.Internal;
 
 namespace Bricelam.EntityFrameworkCore.Sqlite
 {
-    class SqliteExCompositeMethodCallTranslator : RelationalCompositeMethodCallTranslator
+    class SqliteExCompositeMethodCallTranslator : SqliteCompositeMethodCallTranslator
     {
-        readonly ICompositeMethodCallTranslator _compositeMethodCallTranslator;
-
-        public SqliteExCompositeMethodCallTranslator(
-            ICompositeMethodCallTranslator compositeMethodCallTranslator,
-            RelationalCompositeMethodCallTranslatorDependencies dependencies)
+        public SqliteExCompositeMethodCallTranslator(RelationalCompositeMethodCallTranslatorDependencies dependencies)
             : base(dependencies)
-        {
-            _compositeMethodCallTranslator = compositeMethodCallTranslator;
-
-            AddTranslators(
-                new[]
-                {
-                    new SqliteTimeSpanMethodTranslator()
-                });
-        }
-
-        public override Expression Translate(MethodCallExpression methodCallExpression, IModel model)
-            => _compositeMethodCallTranslator.Translate(methodCallExpression, model)
-                ?? base.Translate(methodCallExpression, model);
+            => AddTranslators(new[] { new SqliteTimeSpanMethodTranslator() });
     }
 }

@@ -1,102 +1,38 @@
-﻿using System;
-using System.Data;
-using System.Data.Common;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore.Sqlite.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Bricelam.EntityFrameworkCore.Sqlite
 {
-    class SqliteExRelationalConnection : IRelationalConnection
+    class SqliteExRelationalConnection : SqliteRelationalConnection
     {
-        readonly IRelationalConnection _connection;
-
-        public SqliteExRelationalConnection(IRelationalConnection connection)
-            => _connection = connection;
-
-        public string ConnectionString
-            => _connection.ConnectionString;
-
-        public DbConnection DbConnection
-            => _connection.DbConnection;
-
-        public Guid ConnectionId
-            => _connection.ConnectionId;
-
-        public int? CommandTimeout
+        public SqliteExRelationalConnection(
+            RelationalConnectionDependencies dependencies,
+            IRawSqlCommandBuilder rawSqlCommandBuilder)
+            : base(dependencies, rawSqlCommandBuilder)
         {
-            get => _connection.CommandTimeout;
-            set => _connection.CommandTimeout = value;
         }
 
-        public bool IsMultipleActiveResultSetsEnabled
-            => _connection.IsMultipleActiveResultSetsEnabled;
-
-        public IDbContextTransaction CurrentTransaction
-            => _connection.CurrentTransaction;
-
-        public SemaphoreSlim Semaphore
-            => _connection.Semaphore;
-
-        public IDbContextTransaction BeginTransaction(IsolationLevel isolationLevel)
-            => _connection.BeginTransaction(isolationLevel);
-
-        public IDbContextTransaction BeginTransaction()
-            => _connection.BeginTransaction();
-
-        public Task<IDbContextTransaction> BeginTransactionAsync(
-            IsolationLevel isolationLevel,
-            CancellationToken cancellationToken = default)
-            => _connection.BeginTransactionAsync(isolationLevel, cancellationToken);
-
-        public Task<IDbContextTransaction> BeginTransactionAsync(CancellationToken cancellationToken = default)
-            => _connection.BeginTransactionAsync(cancellationToken);
-
-        public bool Close()
-            => _connection.Close();
-
-        public void CommitTransaction()
-            => _connection.CommitTransaction();
-
-        public void Dispose()
-            => _connection.Dispose();
-
-        public bool Open(bool errorsExpected = false)
+        public bool Open(bool errorsExpected)
         {
-            if (!_connection.Open(errorsExpected))
+            if (!base.Open(errorsExpected))
                 return false;
 
-            ((SqliteConnection)_connection.DbConnection).AddEFCoreExtensions();
+            ((SqliteConnection)DbConnection).AddEFCoreExtensions();
 
             return true;
         }
 
-        public async Task<bool> OpenAsync(CancellationToken cancellationToken, bool errorsExpected = false)
+        public async Task<bool> OpenAsync(CancellationToken cancellationToken, bool errorsExpected)
         {
-            if (!await _connection.OpenAsync(cancellationToken, errorsExpected))
+            if (!await base.OpenAsync(cancellationToken, errorsExpected))
                 return false;
 
-            ((SqliteConnection)_connection.DbConnection).AddEFCoreExtensions();
+            ((SqliteConnection)DbConnection).AddEFCoreExtensions();
 
             return true;
         }
-
-        public void RegisterBufferable(Microsoft.EntityFrameworkCore.Query.Internal.IBufferable bufferable)
-            => _connection.RegisterBufferable(bufferable);
-
-        public Task RegisterBufferableAsync(
-            Microsoft.EntityFrameworkCore.Query.Internal.IBufferable bufferable,
-            CancellationToken cancellationToken)
-            => _connection.RegisterBufferableAsync(bufferable, cancellationToken);
-
-        public void ResetState()
-            => _connection.ResetState();
-
-        public void RollbackTransaction()
-            => _connection.RollbackTransaction();
-
-        public IDbContextTransaction UseTransaction(DbTransaction transaction)
-            => _connection.UseTransaction(transaction);
     }
 }
