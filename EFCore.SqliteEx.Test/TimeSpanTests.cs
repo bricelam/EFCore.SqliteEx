@@ -133,6 +133,24 @@ namespace Bricelam.EntityFrameworkCore.Sqlite
                 "SELECT timespan(-days(\"e\".\"Value\"))");
         }
 
+        [Fact]
+        public void op_Add()
+        {
+            Test(
+                TestEntity.Create(TimeSpan.FromMinutes(1)),
+                x => x.Select(e => e.Value + new TimeSpan(0, 1, 0)),
+                "SELECT timespan(days(\"e\".\"Value\") + days('00:01:00'))");
+        }
+
+        [Fact]
+        public void Add()
+        {
+            Test(
+                TestEntity.Create(TimeSpan.FromMinutes(1)),
+                x => x.Select(e => e.Value.Add(new TimeSpan(0, 1, 0))),
+                "SELECT timespan(days(\"e\".\"Value\") + days('00:01:00'))");
+        }
+
         void Test<TValue, TResult>(
             TestEntity<TValue> seed,
             Func<IQueryable<TestEntity<TValue>>, IQueryable<TResult>> query,

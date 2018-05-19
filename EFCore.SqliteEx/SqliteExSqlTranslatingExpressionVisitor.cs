@@ -39,5 +39,31 @@ namespace Bricelam.EntityFrameworkCore.Sqlite
 
             return base.VisitUnary(expression);
         }
+
+        protected override Expression VisitBinary(BinaryExpression binaryExpression)
+        {
+            if (binaryExpression.NodeType == ExpressionType.Add
+                && binaryExpression.Right.Type == typeof(TimeSpan)
+                && binaryExpression.Left.Type == typeof(TimeSpan))
+            {
+                return new SqlFunctionExpression(
+                    "timespan",
+                    typeof(TimeSpan),
+                    new[]
+                    {
+                        Expression.Add(
+                            new SqlFunctionExpression(
+                                "days",
+                                typeof(double),
+                                new[] { Visit(binaryExpression.Left) }),
+                            new SqlFunctionExpression(
+                                "days",
+                                typeof(double),
+                                new[] { Visit(binaryExpression.Right) }))
+                    });
+            }
+
+            return base.VisitBinary(binaryExpression);
+        }
     }
 }

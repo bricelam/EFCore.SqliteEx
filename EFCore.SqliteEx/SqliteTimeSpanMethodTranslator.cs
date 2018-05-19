@@ -14,10 +14,31 @@ namespace Bricelam.EntityFrameworkCore.Sqlite
         static readonly MethodInfo _negate = typeof(TimeSpan)
             .GetRuntimeMethod(nameof(TimeSpan.Negate), Type.EmptyTypes);
 
+        static readonly MethodInfo _add = typeof(TimeSpan)
+            .GetRuntimeMethod(nameof(TimeSpan.Add), new[] { typeof(TimeSpan) });
+
         public Expression Translate(MethodCallExpression methodCallExpression)
         {
             var method = methodCallExpression.Method;
-            if (Equals(method, _fromDays))
+            if (Equals(method, _add))
+            {
+                return new SqlFunctionExpression(
+                    "timespan",
+                    typeof(TimeSpan),
+                    new[]
+                    {
+                        Expression.Add(
+                            new SqlFunctionExpression(
+                                "days",
+                                typeof(double),
+                                new[] { methodCallExpression.Object }),
+                            new SqlFunctionExpression(
+                                "days",
+                                typeof(double),
+                                new[] { methodCallExpression.Arguments[0] }))
+                    });
+            }
+            else if (Equals(method, _fromDays))
             {
                 return new SqlFunctionExpression(
                     "timespan",

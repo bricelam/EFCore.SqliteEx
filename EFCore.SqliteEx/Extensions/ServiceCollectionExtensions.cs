@@ -11,25 +11,22 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddSqliteEx(this IServiceCollection services)
             => services
-                .AddOrReplace<ICompositeMethodCallTranslator, SqliteExCompositeMethodCallTranslator>(
-                    ServiceLifetime.Singleton)
-                .AddOrReplace<IMemberTranslator, SqliteExCompositeMemberTranslator>(ServiceLifetime.Singleton)
-                .AddOrReplace<ISqlTranslatingExpressionVisitorFactory, SqliteExSqlTranslatingExpressionVisitorFactory>(
-                    ServiceLifetime.Singleton)
-                .AddOrReplace<IRelationalConnection, SqliteExRelationalConnection>(ServiceLifetime.Scoped);
+                .AddOrReplace(ServiceDescriptor.Singleton<ICompositeMethodCallTranslator, SqliteExCompositeMethodCallTranslator>())
+                .AddOrReplace(ServiceDescriptor.Singleton<IMemberTranslator, SqliteExCompositeMemberTranslator>())
+                .AddOrReplace(ServiceDescriptor.Singleton<ISqlTranslatingExpressionVisitorFactory, SqliteExSqlTranslatingExpressionVisitorFactory>())
+                .AddOrReplace(ServiceDescriptor.Scoped<IRelationalConnection, SqliteExRelationalConnection>());
 
-        private static IServiceCollection AddOrReplace<TService, TImplementation>(
-            this IServiceCollection services,
-            ServiceLifetime lifetime)
+        private static IServiceCollection AddOrReplace(this IServiceCollection services, ServiceDescriptor serviceDescriptor)
         {
-            var serviceDescriptor = services.FirstOrDefault(d => d.ServiceType == typeof(TService));
-            if (serviceDescriptor != null)
+            var serviceDescriptorToReplace = services.FirstOrDefault(
+                d => d.ServiceType == serviceDescriptor.ServiceType);
+            if (serviceDescriptorToReplace != null)
             {
-                Debug.Assert(serviceDescriptor.Lifetime == lifetime);
-                services.Remove(serviceDescriptor);
+                Debug.Assert(serviceDescriptorToReplace.Lifetime == serviceDescriptor.Lifetime);
+                services.Remove(serviceDescriptorToReplace);
             }
 
-            services.Add(new ServiceDescriptor(typeof(TService), typeof(TImplementation), lifetime));
+            services.Add(serviceDescriptor);
 
             return services;
         }
