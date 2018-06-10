@@ -14,9 +14,20 @@ namespace Microsoft.Data.Sqlite
             // NetTopologySuite
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = "SELECT load_extension('mod_spatialite');";
+                // Workaround ericsink/SQLitePCL.raw#225
+                var file = "mod_spatialite";
+                if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
+                {
+                    file += ".dylib";
+                }
+                else if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    file += ".so";
+                }
 
-                // Let the CLR load the library from NuGet package assets
+                command.CommandText = "SELECT load_extension('" + file + "');";
+
+                // Let the CLR load from NuGet package assets. SQLite won't look there
                 var temp = spatialite_version();
 
                 connection.EnableExtensions();
